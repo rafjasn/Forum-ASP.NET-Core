@@ -1,0 +1,90 @@
+﻿@model AspNetCoreMvcIdentity.Models.SearchViewModels.SearchResultModel
+@{
+    ViewData["Title"] = "Results";
+}
+
+<h1>Search results for: @Model.SearchQuery</h1>
+
+
+
+
+<div class= ="row">
+    <form asp-controller="Search" asp-action="Search" method="post">
+        <div class="row">
+            <div class="form-group col-10">
+                <input class="form-control" asp-for="SearchQuery" type="text" placeholder="Search this forum" onfocus="clearThis(this)" />
+               </div> <div class="col-2">
+                    <button type="submit" class="btn btn-block btn-outline-primary"><i class="fa fa-search"></i></button>
+                </div>
+                </div>
+    </form>
+</div>
+@if (Model.Posts.Any())
+{
+
+    <table class="table table-bordered table-hover">
+
+        <tbody>
+            @foreach (var post in Model.Posts)
+            {
+                <tr>
+                    <td>
+                        <div>
+                            <div style="font-size: 1.5em"><a asp-controller="Post" asp-action="Index" asp-route-id="@post.Id">@post.Title</a></div>
+                            <div>by <a class="badge badge-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a> <span style="font-size: 0.8em">(@post.AuthorRating)</span></div>
+                            <div>Posted on: @post.DatePosted</div>
+
+
+                            @if (post.RepliesCount == 0)
+                            {
+                                <div>No replies</div>
+                            }
+                            @if (post.RepliesCount == 1)
+                            {
+                                <div>1 reply</div>
+                            }
+                            @if (post.RepliesCount > 1)
+                            {
+                                <div>@post.RepliesCount replies</div>
+                            }
+
+
+
+                            @if (User.IsInRole("Admin"))
+                            {
+
+                                <div><a asp-controller="Post" asp-action="Delete" asp-route-id="@post.Id">Delete post</a></div>
+
+                            }
+
+
+
+
+                        </div>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+}
+else
+{
+    <div>
+        <h3>No Posts were found</h3>
+    </div>
+}
+
+
+
+
+
+
+@section scripts{
+    <script>
+        function clearThis(target) {
+            target.value = "";
+        }
+    </script>
+}

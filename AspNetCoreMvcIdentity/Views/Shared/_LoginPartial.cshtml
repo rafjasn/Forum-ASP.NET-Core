@@ -1,0 +1,42 @@
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @User.Identity.Name!</a>
+        </li>
+        <li class="dropdown show">
+            <a href="#" class="btn  dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Settings</a>
+            <ul class="dropdown-menu">
+                <div role="separator" class="dropdown-divider"></div>
+                <div class="dropdown-header">Profile</div>
+                <a class="dropdown-item" asp-controller="Profile" asp-action="Details" asp-route-id="@UserManager.GetUserId(User)">My Profile</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div role="separator" class="dropdown-divider"></div>
+                    <div class="dropdown-header">Admin</div>
+                    <a class="dropdown-item" asp-controller="Forum" asp-action="Create">Create forum</a>
+                    <a class="dropdown-item" asp-controller="Profile" asp-action="Index">View Users</a>
+                }
+            </ul>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+        </li>
+    }
+</ul>

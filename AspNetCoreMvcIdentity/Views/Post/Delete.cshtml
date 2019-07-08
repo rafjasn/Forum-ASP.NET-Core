@@ -1,0 +1,19 @@
+﻿@model AspNetCoreMvcIdentity.Models.PostViewModels.PostListingModel
+
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+
+<h1>Delete</h1>
+
+@Model.Title<br />
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Delete" class="btn btn-danger" /> |
+    <a asp-controller="Forum" asp-action="Details">Back to List</a>
+</form>

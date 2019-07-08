@@ -1,0 +1,37 @@
+﻿@model  AspNetCoreMvcIdentity.Models.ApplicationUserViewModels.ProfileListModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<div class="row">
+    List of all users
+</div>
+
+<div class="row">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Member Since</th>
+                <th>Rating </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach( var user in Model.Profiles)
+            {
+                <tr>
+                    <td><img  src="@user.ProfileImageUrl" width="50px"/></td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.MemberSince</td>
+                    <td>@user.UserRating</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

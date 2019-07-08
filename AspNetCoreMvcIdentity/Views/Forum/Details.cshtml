@@ -1,0 +1,115 @@
+﻿@model AspNetCoreMvcIdentity.Models.ForumViewModels.ForumDetailsModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Welcome to @Model.Forum.Title forum</h1>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="row">
+        <h3><a class="btn btn-primary" asp-controller="Post" asp-action="Create" asp-route-id="@Model.Forum.Id"> New Post</a></h3>
+
+    </div>
+}
+else
+{
+    <p class="text-muted">
+        You must be a registered user to add new posts.
+        <a class=" text-dark" asp-controller="Account" asp-action="Login">Login</a> or
+        <a class=" text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+        now.
+    </p>
+
+}
+
+
+
+
+@if (Model.Posts.Any())
+{
+    <div>
+        <form asp-controller="Forum" asp-action="Search" method="post">
+            <div class="row">
+                <div class="col-10">
+                    <input class="form-control" asp-for="SearchQuery" type="text" placeholder="Search this forum" onfocus="clearThis(this)" />
+                </div><div class="col-2">
+    <button type="submit" class="btn btn-block btn-outline-primary"><i class="fa fa-search"></i></button>
+</div>
+                <input asp-for="Forum.Id" name="id" type="hidden" />
+            </div>
+        </form>
+    </div>
+
+    <br />
+    <table class="table table-bordered table-hover">
+
+        <tbody>
+            @foreach (var post in Model.Posts)
+            {
+                <tr>
+                <td>
+                <div >
+                    <div style="font-size: 1.5em"><a asp-controller="Post" asp-action="Index" asp-route-id="@post.Id">@post.Title</a></div>
+                    <div>by <a class="badge badge-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a> <span style="font-size: 0.8em">(@post.AuthorRating)</span></div>
+                    <div>Posted on: @post.DatePosted</div>
+
+
+                    @if (post.RepliesCount == 0)
+                    {
+                        <div>No replies</div>
+                    }
+                    @if (post.RepliesCount == 1)
+                    {
+                        <div>1 reply</div>
+                    }
+                    @if (post.RepliesCount > 1)
+                    {
+                        <div>@post.RepliesCount replies</div>
+                    }
+
+
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                       
+                <div ><a asp-controller="Post" asp-action="Delete" asp-route-id="@post.Id">Delete post</a></div>
+
+            }
+
+
+
+
+                    </div>
+                    </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+}
+else
+{
+    <div class="text-center ">
+        <h2>There are no posts in this forum</h2>
+        <h3><a asp-controller="Post" asp-action="Create" asp-route-id="@Model.Forum.Id"> Create new Post</a></h3>
+
+    </div>
+}
+
+
+
+
+
+
+@section scripts{
+    <script>
+        function clearThis(target) {
+            target.value = "";
+        }
+    </script>
+}

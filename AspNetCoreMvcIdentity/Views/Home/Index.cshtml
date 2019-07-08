@@ -1,0 +1,174 @@
+﻿@model AspNetCoreMvcIdentity.Models.HomeViewModels.HomeIndexModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+
+
+
+
+
+        <div>
+            <form asp-controller="Search" asp-action="Search" method="post">
+                <div class="row">
+                    <div class="form-group col-10">
+                        <input class="form-control form-control-lg" asp-for="SearchQuery" type="text" placeholder="Search for posts" />
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-block btn-lg btn-primary "><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <br />
+        <input onclick="change()" class="btn btn-outline-primary btn-block btn-lg" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" value="Show list of forums" id="myButton1"></input>
+
+        <div class="collapse" id="collapseExample">
+
+
+            <table class="table table-bordered table-hover text-left">
+                @foreach (var forum in Model.Forums)
+                {
+                    <tr>
+                        <td>
+                            <div class="row">
+                                <div class="col-1 text-center"><img src="@forum.ForumImageUrl" style="width: 40px" /></div>
+                                <div class="col-10 ">
+                                    <a style="font-size: 1.5em" asp-controller="Forum" asp-action="Details" asp-route-id="@forum.Id">
+                                        @forum.Title
+                                    </a>
+
+                                    @if (forum.HasRecentPost)
+                                    {
+                                        <div class="badge badge-success">New</div>
+                                    }
+                                    <br />
+
+                                    @forum.Description
+                                    <div class="text-muted">
+                                        @forum.NumberOfPosts Posts by
+                                        @forum.NumberOfUsers Users
+                                    </div>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <br />
+                                        <a asp-action="Delete" asp-route-id="@forum.Id">Delete</a>
+
+                                    }
+                                </div>
+
+
+
+
+
+
+
+                            </div>
+                        </td>
+                    </tr>
+
+
+                }
+            </table>
+
+
+        </div>
+
+        <br /><br />
+
+        <div class="row">
+            <div class="col-lg-6">
+                <h3> Latest posts</h3>
+                <table class="table table-hover table">
+
+
+
+                    <thead>
+                        <tr></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var post in Model.LatestPosts)
+                        {
+                            <tr>
+                                <td>
+                                    <div><a asp-controller="Post" asp-action="Index" asp-route-id="@post.Id">@post.Title</a></div>
+                                    <div>by <a class="text-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a></div>
+                                    <div class="text-muted">
+                                        @if (post.RepliesCount == 1)
+                                        {
+                                            <span>@post.RepliesCount Reply</span>
+                                        }
+                                        @if (post.RepliesCount == 0)
+                                        {
+                                            <span>No replies</span>
+                                        }
+                                        @if (post.RepliesCount > 1)
+                                        {
+                                            <span>@post.RepliesCount Replies</span>
+
+                                        }
+                                    </div>
+
+
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+
+                </table>
+            </div>
+
+            <div class="col-lg-6">
+
+                <table class="table table-hover">
+
+
+
+                    <thead>
+                        <tr> <h3> Most popular posts</h3></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var post in Model.PopularPosts)
+                        {
+                            <tr>
+                                <td>
+                                    <div><a asp-controller="Post" asp-action="Index" asp-route-id="@post.Id">@post.Title</a></div>
+                                    <div>by <a class="text-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@post.AuthorId">@post.AuthorName</a></div>
+                                    <div class="text-muted">
+
+                                        @if (post.RepliesCount == 1)
+                                        {
+                                            <span>@post.RepliesCount Reply</span>
+                                        }
+                                        @if (post.RepliesCount == 0)
+                                        {
+                                            <span>No replies</span>
+                                        }
+                                        @if (post.RepliesCount > 1)
+                                        {
+                                            <span>@post.RepliesCount Replies</span>
+
+                                        }
+
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+
